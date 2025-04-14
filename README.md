@@ -6,6 +6,7 @@ An interactive web application to solve the **Knapsack Problem** using:
 - 0/1 Knapsack (Dynamic Programming)
 - Fractional Knapsack (Greedy Algorithm)
 
+ 
 This project helps users manage a virtual backpack by adding and removing items with specific weights and values, optimizing for the most valuable combination within a given weight capacity.
 
 ---
