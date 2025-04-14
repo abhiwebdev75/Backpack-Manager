@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Backpack Management System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #dc2626;
+            --bg-color: #f8f9fa;
+            --text-color: #1f2937;
+            --card-bg: #ffffff;
+            --card-shadow: rgba(0, 0, 0, 0.1);
+            --card-border: rgba(0, 0, 0, 0.1);
+            --bg-gradient-start: #e6f0ff;
+            --bg-gradient-end: #b3d1ff;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #3b82f6;
+            --secondary-color: #1e40af;
+            --accent-color: #ef4444;
+            --bg-color: #0f172a;
+            --text-color: #f3f4f6;
+            --card-bg: #1f2937;
+            --card-shadow: rgba(0, 0, 0, 0.3);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-end: #1e3a8a;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .card {
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            background: var(--card-bg);
+            box-shadow: 0 4px 6px var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px var(--card-shadow);
+        }
+
+        h1,
+        h4 {
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .section-title {
+            border-left: 5px solid var(--primary-color);
+            padding-left: 10px;
+            margin-bottom: 12px;
+            color: var(--text-color);
+        }
+
+        .results {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid var(--card-border);
+        }
+
+        .form-control,
+        .form-select {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: var(--card-bg);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+            color: var(--text-color);
+        }
+
+        table {
+            border-radius: 10px;
+            overflow: hidden;
+            background: var(--card-bg);
+        }
+
+        .table {
+            color: var(--text-color);
+        }
+
+        .table thead {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn i {
+            vertical-align: middle;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+        }
+
+        .btn-success {
+            background: #10b981;
+            border: none;
+        }
+
+        .btn-info {
+            background: #0ea5e9;
+            border: none;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            border: none;
+        }
+
+        .btn-danger {
+            background: var(--accent-color);
+            border: none;
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-outline-success {
+            color: #10b981;
+            border-color: #10b981;
+        }
+
+        .btn-outline-success:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--primary-color);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px var(--card-shadow);
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-toggle i {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle animate__animated animate__fadeIn" id="themeToggle">
+        <i class="bi bi-moon-fill"></i>
+    </button>
+
+    <div class="container my-5">
+        <div class="card shadow-lg p-4 animate__animated animate__fadeIn">
+            <h1 class="text-center mb-4">🎒 Backpack Management System</h1>
+
+            <!-- Section: Add Item -->
+            <div class="mb-4">
+                <div class="section-title">
+                    <h4>Add Item</h4>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-4 col-12">
+                        <input type="text" id="itemName" class="form-control" placeholder="Item Name (e.g. Notebook)">
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <input type="number" id="itemWeight" class="form-control" placeholder="Weight (kg)" min="1">
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <input type="number" id="itemValue" class="form-control" placeholder="Value ($)" min="1">
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <button class="btn btn-primary w-100" onclick="addItem()">
+                            <i class="bi bi-plus-circle me-1"></i> Add Item
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Remove Item -->
+            <div class="mb-4">
+                <div class="section-title">
+                    <h4>Remove Item</h4>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-8 col-12">
+                        <input type="text" id="removeItemName" class="form-control"
+                            placeholder="Enter item name to remove">
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <button class="btn btn-danger w-100" onclick="removeItem()">
+                            <i class="bi bi-trash me-1"></i> Remove Item
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Knapsack Settings -->
+            <div class="mb-4">
+                <div class="section-title">
+                    <h4>Knapsack Settings</h4>
+                </div>
+                <div class="row g-2 mb-2">
+                    <div class="col-md-3 col-6">
+                        <input type="number" id="weightLimit" class="form-control" placeholder="Max Weight (kg)"
+                            min="1">
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <select id="fractionalApproach" class="form-select">
+                            <option value="maxProfit">Maximize Profit</option>
+                            <option value="minWeight">Minimize Weight</option>
+                            <option value="ratio">Value-to-Weight Ratio</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <button class="btn btn-success w-100" onclick="runZeroOneKnapsack()">
+                            <i class="bi bi-cpu-fill"></i> Run 0-1 Knapsack
+                        </button>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <button class="btn btn-info w-100 text-white" onclick="runFractionalKnapsack()">
+                            <i class="bi bi-graph-up-arrow"></i> Run Fractional
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Random Controls -->
+            <div class="mb-4">
+                <div class="section-title">
+                    <h4>Auto Item Generator</h4>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <select id="randomSolveType" class="form-select">
+                            <option value="none">Only Add Items</option>
+                            <option value="zeroOne">Run 0-1 After Add</option>
+                            <option value="fractional">Run Fractional After Add</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-warning w-100" onclick="generateRandomItems()">
+                            <i class="bi bi-shuffle"></i> Generate Random Items
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-secondary w-100" onclick="reset()">
+                            <i class="bi bi-arrow-clockwise"></i> Reset All
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Backpack Content -->
+            <div class="mb-4">
+                <div class="section-title">
+                    <h4>Backpack Contents</h4>
+                </div>
+                <table class="table table-striped table-bordered text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Weight (kg)</th>
+                            <th>Value ($)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="backpackContents"></tbody>
+                </table>
+                <p id="totalWeight"><strong>Total Weight:</strong> 0 kg</p>
+                <p id="totalValue"><strong>Total Value:</strong> $0</p>
+            </div>
+
+            <!-- Section: Knapsack Results -->
+            <div class="section-title">
+                <h4>Results</h4>
+            </div>
+            <div class="results">
+                <div id="zeroOneResults" class="mb-3"></div>
+                <div id="fractionalResults"></div>
+            </div>
+
+            <div class="text-end my-3">
+                <button class="btn btn-outline-primary me-2" onclick="exportAsJSON()">Export as JSON</button>
+                <button class="btn btn-outline-success" onclick="exportAsCSV()">Export as CSV</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        // Check for saved theme preference or use system preference
+        const currentTheme = localStorage.getItem('theme') || 
+                            (prefersDarkScheme.matches ? 'dark' : 'light');
+        
+        // Apply the saved theme
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        updateThemeIcon(currentTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        // Update theme icon based on current theme
+        function updateThemeIcon(theme) {
+            if (theme === 'dark') {
+                themeIcon.classList.remove('bi-moon-fill');
+                themeIcon.classList.add('bi-sun-fill');
+            } else {
+                themeIcon.classList.remove('bi-sun-fill');
+                themeIcon.classList.add('bi-moon-fill');
+            }
+        }
+
+        // Listen for system theme changes
+        prefersDarkScheme.addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+                const newTheme = e.matches ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                updateThemeIcon(newTheme);
+            }
+        });
+
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        });
+
+        document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));
+
+        let items = [];
+        let totalWeight = 0;
+        let totalValue = 0;
+
+        function sweetAlert(title, icon = "info") {
+            Swal.fire({ title, icon, confirmButtonText: "OK" });
+        }
+
+        function saveItems() {
+            localStorage.setItem('backpackItems', JSON.stringify(items));
+        }
+
+        function updateBackpackDisplay() {
+            const tbody = document.getElementById('backpackContents');
+            tbody.innerHTML = '';
+            items.forEach(item => {
+                tbody.innerHTML += `<tr><td>${item.name}</td><td>${item.weight.toFixed(2)}</td><td>${item.value.toFixed(2)}</td></tr>`;
+            });
+            document.getElementById('totalWeight').textContent = `Total Weight: ${totalWeight.toFixed(2)} kg`;
+            document.getElementById('totalValue').textContent = `Total Value: $${totalValue.toFixed(2)}`;
+        }
+
+        function loadItems() {
+            const storedItems = JSON.parse(localStorage.getItem('backpackItems'));
+            if (storedItems) {
+                items = storedItems.map(item => ({
+                    name: item.name,
+                    weight: parseFloat(item.weight),
+                    value: parseFloat(item.value)
+                }));
+                totalWeight = items.reduce((sum, item) => sum + item.weight, 0);
+                totalValue = items.reduce((sum, item) => sum + item.value, 0);
+                updateBackpackDisplay();
+            }
+        }
+
+        function addItem() {
+            const name = document.getElementById('itemName').value.trim();
+            const weight = parseFloat(document.getElementById('itemWeight').value);
+            const value = parseFloat(document.getElementById('itemValue').value);
+            if (!name || isNaN(weight) || weight <= 0 || isNaN(value) || value <= 0) {
+                sweetAlert("Enter valid item details!", "warning");
+                return;
+            }
+            items.push({ name, weight, value });
+            totalWeight += weight;
+            totalValue += value;
+            saveItems();
+            updateBackpackDisplay();
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemWeight').value = '';
+            document.getElementById('itemValue').value = '';
+        }
+
+        function removeItem() {
+            const name = document.getElementById('removeItemName').value.toLowerCase().trim();
+            const index = items.findIndex(item => item.name.toLowerCase() === name);
+            if (index === -1) {
+                sweetAlert("Item not found!", "error");
+                return;
+            }
+            totalWeight -= items[index].weight;
+            totalValue -= items[index].value;
+            items.splice(index, 1);
+            saveItems();
+            updateBackpackDisplay();
+            document.getElementById('removeItemName').value = '';
+        }
+
+        function zeroOneKnapsack(items, capacity) {
+            const n = items.length;
+            const intItems = items.map(item => ({
+                ...item,
+                weight: Math.round(item.weight), // Convert float to nearest integer
+            }));
+            const dp = Array.from({ length: n + 1 }, () => Array(capacity + 1).fill(0));
+
+            for (let i = 1; i <= n; i++) {
+                for (let w = 0; w <= capacity; w++) {
+                    if (intItems[i - 1].weight <= w) {
+                        dp[i][w] = Math.max(
+                            dp[i - 1][w],
+                            dp[i - 1][w - intItems[i - 1].weight] + intItems[i - 1].value
+                        );
+                    } else {
+                        dp[i][w] = dp[i - 1][w];
+                    }
+                }
+            }
+
+            const selected = [];
+            let w = capacity;
+            for (let i = n; i > 0 && w > 0; i--) {
+                if (dp[i][w] !== dp[i - 1][w]) {
+                    selected.push(items[i - 1]); // use original item (not rounded one)
+                    w -= Math.round(items[i - 1].weight);
+                }
+            }
+
+            return { totalValue: dp[n][capacity], selectedItems: selected };
+        }
+
+
+        function fractionalKnapsack(items, capacity, approach) {
+            const itemsWithRatio = items.map(item => ({ ...item, ratio: item.value / item.weight }));
+            if (approach === 'maxProfit') itemsWithRatio.sort((a, b) => b.value - a.value);
+            else if (approach === 'minWeight') itemsWithRatio.sort((a, b) => a.weight - b.weight);
+            else itemsWithRatio.sort((a, b) => b.ratio - a.ratio);
+
+            let value = 0;
+            const selected = [];
+            for (const item of itemsWithRatio) {
+                if (capacity <= 0) break;
+                if (item.weight <= capacity) {
+                    selected.push(item);
+                    value += item.value;
+                    capacity -= item.weight;
+                } else {
+                    const fraction = capacity / item.weight;
+                    selected.push({ ...item, weight: capacity, value: item.value * fraction });
+                    value += item.value * fraction;
+                    break;
+                }
+            }
+            return { totalValue: value, selectedItems: selected };
+        }
+
+        function displayResults(divId, title, result) {
+            const div = document.getElementById(divId);
+            div.innerHTML = `<h5>${title}</h5><p><strong>Total Value:</strong> $${result.totalValue.toFixed(2)}</p>`;
+            result.selectedItems.forEach(item => {
+                div.innerHTML += `<div>${item.name} — ${item.weight.toFixed(2)} kg — $${item.value.toFixed(2)}</div>`;
+            });
+        }
+
+        function runZeroOneKnapsack() {
+            const capacity = parseFloat(document.getElementById('weightLimit').value);
+            if (isNaN(capacity) || capacity <= 0) {
+                sweetAlert("Enter a valid weight limit!", "warning");
+                return;
+            }
+            const result = zeroOneKnapsack(items, Math.floor(capacity));
+            displayResults('zeroOneResults', '0-1 Knapsack Results', result);
+        }
+
+        function runFractionalKnapsack() {
+            const capacity = parseFloat(document.getElementById('weightLimit').value);
+            if (isNaN(capacity) || capacity <= 0) {
+                sweetAlert("Enter a valid weight limit!", "warning");
+                return;
+            }
+            const approach = document.getElementById('fractionalApproach').value;
+            const result = fractionalKnapsack(items, capacity, approach);
+            displayResults('fractionalResults', 'Fractional Knapsack Results', result);
+        }
+
+        function generateRandomItems() {
+            const randomNames = ["Laptop", "Notebook", "Pen", "Charger", "Water Bottle", "Snack", "Headphones", "Jacket"];
+            for (let i = 0; i < 5; i++) {
+                const name = `${randomNames[Math.floor(Math.random() * randomNames.length)]} ${Math.floor(Math.random() * 100)}`;
+                const weight = parseFloat((Math.random() * 5 + 1).toFixed(2));
+                const value = parseFloat((Math.random() * 100 + 10).toFixed(2));
+                items.push({ name, weight, value });
+                totalWeight += weight;
+                totalValue += value;
+            }
+            saveItems();
+            updateBackpackDisplay();
+            sweetAlert("Random items added!", "success");
+
+            const solveType = document.getElementById("randomSolveType").value;
+            const capacity = parseFloat(document.getElementById('weightLimit').value);
+            if (isNaN(capacity) || capacity <= 0) {
+                sweetAlert("Enter a valid weight limit before running knapsack!", "warning");
+                return;
+            }
+
+            if (solveType === "zeroOne") {
+                const result = zeroOneKnapsack(items, Math.floor(capacity));
+                displayResults('zeroOneResults', '0-1 Knapsack Results', result);
+            } else if (solveType === "fractional") {
+                const approach = document.getElementById('fractionalApproach').value;
+                const result = fractionalKnapsack(items, capacity, approach);
+                displayResults('fractionalResults', 'Fractional Knapsack Results', result);
+            }
+        }
+
+
+        function reset() {
+            items = [];
+            totalWeight = 0;
+            totalValue = 0;
+            localStorage.removeItem('backpackItems');
+            updateBackpackDisplay();
+            document.getElementById('zeroOneResults').innerHTML = '';
+            document.getElementById('fractionalResults').innerHTML = '';
+            sweetAlert("All data has been reset.", "info");
+        }
+        // document.querySelector('.results').scrollIntoView({ behavior: 'smooth' });
+
+        function exportAsJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(items, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", "backpack_items.json");
+            dlAnchor.click();
+        }
+
+        function exportAsCSV() {
+            if (items.length === 0) return;
+
+            const headers = Object.keys(items[0]);
+            const csvRows = [
+                headers.join(","), // header row
+                ...items.map(item => headers.map(h => `"${item[h]}"`).join(",")) // data rows
+            ];
+
+            const csvData = csvRows.join("\n");
+            const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+
+            const dlAnchor = document.createElement("a");
+            dlAnchor.setAttribute("href", url);
+            dlAnchor.setAttribute("download", "backpack_items.csv");
+            dlAnchor.click();
+        }
+
+
+        window.onload = loadItems;
+    </script>
+</body>
+
+</html>

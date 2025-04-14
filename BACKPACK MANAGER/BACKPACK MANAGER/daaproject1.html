@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Backpack Manager - Features & Guide</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --secondary-color: #1e40af;
+      --accent-color: #dc2626;
+      --bg-color: #f8f9fa;
+      --text-color: #1f2937;
+      --card-bg: #ffffff;
+      --card-shadow: rgba(0, 0, 0, 0.1);
+      --card-border: rgba(0, 0, 0, 0.1);
+      --card-header-bg: #2563eb;
+      --card-header-text: #ffffff;
+      --bg-gradient-start: #e6f0ff;
+      --bg-gradient-end: #b3d1ff;
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #3b82f6;
+      --secondary-color: #1e40af;
+      --accent-color: #ef4444;
+      --bg-color: #0f172a;
+      --text-color: #f3f4f6;
+      --card-bg: #1f2937;
+      --card-shadow: rgba(0, 0, 0, 0.3);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --card-header-bg: #3b82f6;
+      --card-header-text: #ffffff;
+      --bg-gradient-start: #0f172a;
+      --bg-gradient-end: #1e3a8a;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      min-height: 100vh;
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    .navbar {
+      background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+      box-shadow: 0 2px 10px var(--card-shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-icon:hover {
+      transform: scale(1.1);
+    }
+
+    .card {
+      border: 1px solid var(--card-border);
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      color: var(--text-color);
+      box-shadow: 0 4px 6px var(--card-shadow);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px var(--card-shadow);
+    }
+
+    .card-header {
+      border-radius: 15px 15px 0 0 !important;
+      background: var(--card-header-bg);
+      color: var(--card-header-text);
+      font-weight: 600;
+    }
+
+    footer {
+      background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+      color: white;
+      padding: 1.5rem 0;
+      margin-top: 3rem;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px var(--card-shadow);
+    }
+
+    .list-group-item {
+      border: 1px solid var(--card-border);
+      margin-bottom: 0.5rem;
+      border-radius: 10px !important;
+      background: var(--card-bg);
+      transition: all 0.3s ease;
+      color: var(--text-color);
+    }
+
+    .list-group-item:hover {
+      transform: translateX(10px);
+      background: var(--card-bg);
+    }
+
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease-out;
+    }
+
+    .animate-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-title {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--text-color);
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      width: 50%;
+      height: 3px;
+      background: var(--primary-color);
+      bottom: -10px;
+      left: 25%;
+      border-radius: 3px;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: var(--primary-color);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px var(--card-shadow);
+      transition: all 0.3s ease;
+      color: white;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1);
+    }
+
+    .theme-toggle i {
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    /* Ensure the toggle button is visible in both themes */
+    [data-theme="dark"] .theme-toggle {
+      background: var(--primary-color);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Additional contrast improvements */
+    .card-body {
+      background: var(--card-bg);
+    }
+
+    .card-text {
+      color: var(--text-color);
+    }
+
+    .card-title {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .list-group-item strong {
+      color: var(--primary-color);
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle Button -->
+  <button class="theme-toggle animate__animated animate__fadeIn" id="themeToggle">
+    <i class="bi bi-moon-fill"></i>
+  </button>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand animate__animated animate__fadeIn" href="#">🎒 Backpack Manager</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link active" href="#">Features</a></li>
+          <li class="nav-item"><a class="nav-link" href="#knapsack">Knapsack Info</a></li>
+          <li class="nav-item"><a class="nav-link" href="#usage">How to Use</a></li>
+          <li class="nav-item"><a class="nav-link" href="daa_exp.html">Go to App</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container py-5">
+    <h1 class="mb-4 text-center animate__animated animate__fadeInDown">🎒 Backpack Management System</h1>
+    <p class="lead text-center animate__animated animate__fadeInUp">Easily manage your items using optimization strategies!</p>
+
+    <hr class="my-5" />
+
+    <!-- Features Section -->
+    <h2 class="mb-4 text-primary section-title animate-on-scroll">🔧 Features</h2>
+    <div class="row g-4">
+      <div class="col-md-6 animate-on-scroll">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-plus-circle feature-icon"></i> Add Items</h5>
+            <p class="card-text">Add items to the backpack with name, weight, and value. Items are stored locally.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 animate-on-scroll">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-trash feature-icon"></i> Remove Items</h5>
+            <p class="card-text">Easily delete any item from the list using the remove button.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 animate-on-scroll">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-bar-chart feature-icon"></i> 0/1 & Fractional Knapsack</h5>
+            <p class="card-text">Choose between classic 0/1 or fractional knapsack algorithms to calculate optimal value.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 animate-on-scroll">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-download feature-icon"></i> Export Items</h5>
+            <p class="card-text">Download your backpack items as JSON or CSV for reuse or sharing.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 animate-on-scroll">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-box-arrow-in-down feature-icon"></i> Save/Load Data</h5>
+            <p class="card-text">Backpack items persist using localStorage so they stay saved even after reload.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-5" id="knapsack"/>
+
+    <!-- Knapsack Explanation -->
+    <h2 class="mb-4 text-info section-title animate-on-scroll">🧠 What are 0/1 and Fractional Knapsack Problems?</h2>
+    <div class="row">
+      <div class="col-md-6 animate-on-scroll">
+        <div class="card border-primary shadow-sm">
+          <div class="card-header bg-primary text-white">0/1 Knapsack</div>
+          <div class="card-body">
+            <p class="card-text">
+              In the <strong>0/1 Knapsack problem</strong>, you can either take an entire item or leave it — no partial items allowed. It's solved using <em>Dynamic Programming</em> to maximize the total value without exceeding the weight limit.
+            </p>
+            <ul>
+              <li>✅ Items are either fully taken or skipped.</li>
+              <li>📦 Good for scenarios like picking products where partial use isn't allowed.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 mt-4 mt-md-0 animate-on-scroll">
+        <div class="card border-success shadow-sm">
+          <div class="card-header bg-success text-white">Fractional Knapsack</div>
+          <div class="card-body">
+            <p class="card-text">
+              In the <strong>Fractional Knapsack problem</strong>, items can be broken into smaller parts. It's solved using a <em>Greedy Algorithm</em>, usually by selecting items with the highest value-to-weight ratio first.
+            </p>
+            <ul>
+              <li>✅ Items can be partially included.</li>
+              <li>🥤 Ideal for resources like liquids or grains that can be divided.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-5" id="usage"/>
+
+    <!-- How to Use -->
+    <h2 class="mb-4 text-success section-title animate-on-scroll">📖 How to Use</h2>
+    <ol class="list-group list-group-numbered">
+      <li class="list-group-item animate-on-scroll">Go to the main backpack manager page.</li>
+      <li class="list-group-item animate-on-scroll">Use the form to add item name, weight, and value.</li>
+      <li class="list-group-item animate-on-scroll">Click "Add Item" to insert the item into the backpack list.</li>
+      <li class="list-group-item animate-on-scroll">Choose the knapsack type (0/1 or Fractional) and enter capacity.</li>
+      <li class="list-group-item animate-on-scroll">Click "Solve" to view the optimal selection of items.</li>
+      <li class="list-group-item animate-on-scroll">Export the current backpack list using "Export as JSON/CSV" buttons.</li>
+      <li class="list-group-item animate-on-scroll">Use the clear/reset button to start fresh if needed.</li>
+    </ol>
+
+    <div class="text-center mt-5">
+      <a href="daa_exp.html" class="btn btn-primary btn-lg animate__animated animate__pulse animate__infinite">🔙 Go to Backpack Manager</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center">
+    <div class="container">
+      <p class="mb-0">© 2025 Backpack Manager. Built with ❤️ by Abhinash</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Theme Toggle Functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    // Check for saved theme preference or use system preference
+    const currentTheme = localStorage.getItem('theme') || 
+                        (prefersDarkScheme.matches ? 'dark' : 'light');
+    
+    // Apply the saved theme
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeIcon(currentTheme);
+
+    // Toggle theme on button click
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+    });
+
+    // Update theme icon based on current theme
+    function updateThemeIcon(theme) {
+      if (theme === 'dark') {
+        themeIcon.classList.remove('bi-moon-fill');
+        themeIcon.classList.add('bi-sun-fill');
+      } else {
+        themeIcon.classList.remove('bi-sun-fill');
+        themeIcon.classList.add('bi-moon-fill');
+      }
+    }
+
+    // Listen for system theme changes
+    prefersDarkScheme.addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) {
+        const newTheme = e.matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        updateThemeIcon(newTheme);
+      }
+    });
+
+    // Intersection Observer for scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    });
+
+    document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>
+
+
+
+
