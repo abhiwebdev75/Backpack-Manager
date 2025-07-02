@@ -8,7 +8,7 @@ An interactive web application to solve the **Knapsack Problem** using:
 
  
 This project helps users manage a virtual backpack by adding and removing items with specific weights and values, optimizing for the most valuable combination within a given weight capacity.
-
+--Abhiansh
 ---
 
 ## 📌 Project Aim
